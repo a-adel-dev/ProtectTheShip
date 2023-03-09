@@ -14,7 +14,7 @@ public class PlayerBehavior : MonoBehaviour
     private int weaponPower = 10;
 
     [SerializeField]
-    private float timer = 2f;
+    private float _harvestingTimer = 2f;
 
     private int _metalValue;
 
@@ -22,7 +22,7 @@ public class PlayerBehavior : MonoBehaviour
     TextMeshProUGUI metalValueText;
 
     private IInteractive _interactiveObject;
-    float _timePassed;
+    [SerializeField] float _timePassed;
 
 
 
@@ -36,11 +36,7 @@ public class PlayerBehavior : MonoBehaviour
     private void Update()
     {
         _timePassed += Time.deltaTime;
-        if (_timePassed >= timer)
-        {
-            Interact();
-            _timePassed = 0;
-        }
+        Interact();
     }
 
     private void AcquireInteractiveObject(IInteractive interactiveObject)
@@ -53,15 +49,20 @@ public class PlayerBehavior : MonoBehaviour
     private void Interact()
     {
         if (_interactiveObject == null) return;
+
         if (_interactiveObject.Type == InteractiveObjectType.ResourceNode)
         {
-            var harvestableNode = (ResourceNode)_interactiveObject;
-            int collected = harvestableNode.HarvestNode(_harvestValue);
-            if ( collected > 0)
+            if (_timePassed >= _harvestingTimer)
             {
-                _metalValue += collected;
+                _timePassed = 0;
+                var harvestableNode = (ResourceNode)_interactiveObject;
+                int collected = harvestableNode.HarvestNode(_harvestValue);
+                if (collected > 0)
+                {
+                    _metalValue += collected;
+                }
+                metalValueText.SetText(_metalValue.ToString());
             }
-            metalValueText.SetText(_metalValue.ToString());
         }
     }
 

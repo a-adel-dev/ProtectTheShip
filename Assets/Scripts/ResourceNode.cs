@@ -17,7 +17,7 @@ public class ResourceNode : MonoBehaviour, IInteractive
 
     public int HarvestNode(int value)
     {
-        if (value > resourceValue)
+        if (value < resourceValue)
         {
             resourceValue -= value;
             return value;

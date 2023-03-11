@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResourceNode : MonoBehaviour
@@ -13,7 +10,6 @@ public class ResourceNode : MonoBehaviour
 
     public GameObject GameObject => gameObject;
 
-    public InteractiveObjectType Type => InteractiveObjectType.ResourceNode;
 
     public int HarvestNode(int value)
     {

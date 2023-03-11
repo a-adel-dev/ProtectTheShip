@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ResourceNode : MonoBehaviour, IInteractive
+public class ResourceNode : MonoBehaviour
 {
     [SerializeField]
     private int resourceValue = 100;

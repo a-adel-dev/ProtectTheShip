@@ -9,8 +9,9 @@ public class Mover : MonoBehaviour
     private NavMeshAgent _agent;
     [SerializeField]
     private Animator _animator;
+
     [SerializeField]
-    private float _stoppingDistance;
+    private LayerMask _interactableLayer;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,29 +21,22 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateAnimator();
 
-        if (_agent.remainingDistance >= _stoppingDistance)
+        if (Input.GetMouseButton(1))
         {
-            _animator.SetBool("isMoving", true);
-        }
-        else
-        {
-            _animator.SetBool("isMoving", false);
-        }
-        
-        if (Input.GetMouseButtonDown(1))
-        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+            if (Physics.Raycast(ray, out hit, _interactableLayer))
             {
-                //Debug.DrawLine(Camera.main.transform.position, hit.point);
-                //_agent.enabled = false;
-                //transform.LookAt(new Vector3(hit.transform.position.x, _agent.transform.position.y, hit.transform.position.z));
-                //_agent.enabled = true;
                 _agent.destination = hit.point;
             }
         }
     }
 
-
+    private void UpdateAnimator()
+    {
+        Vector3 localVelocity = transform.InverseTransformDirection(_agent.velocity);
+        _animator.SetFloat("speed", localVelocity.z);
+    }
 }

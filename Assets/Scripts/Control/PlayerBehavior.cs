@@ -1,4 +1,6 @@
+using com.ARTillery.Combat;
 using com.ARTillery.Movement;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,37 +27,67 @@ namespace com.ARTillery.Control
         private LayerMask _interactableLayer;
 
         private Mover _mover;
+        private Fighter _fighter;
 
 
         void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
             _mover = GetComponent<Mover>();
+            _fighter = GetComponent<Fighter>();
         }
 
         private void Update()
         {
-            if (Input.GetMouseButton(1))
+            if (InteractWithCombat())
             {
-                MoveToCursor();
+                return;
             }
-            Interact();
+            if (InteractWithMovement())
+            {
+                return;
+            }
+            print("nothing to do");
         }
 
-        private void MoveToCursor()
+        private bool InteractWithCombat()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, _interactableLayer))
+            //highlight target 
+            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            foreach (RaycastHit hit in hits)
             {
+                CombatTarget target = hit.transform.GetComponent<CombatTarget>();
+                if (target is null)
+                {
+                    continue;
+                }
+                if (Input.GetMouseButton(1))
+                {
+                    _fighter.Attack(target);
+                }
+                return true;
+            }
+            return false;
+        }
+
+
+        private bool InteractWithMovement()
+        {
+            RaycastHit hit;
+            bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
+
+            if (hasHit && Input.GetMouseButton(1))
+            {
+                _fighter.CancelAttack();
                 _mover.MoveTo(hit.point);
             }
+
+            return hasHit;
         }
 
-        private void Interact()
+        private static Ray GetMouseRay()
         {
-
+            return Camera.main.ScreenPointToRay(Input.mousePosition);
         }
-
     }
 }

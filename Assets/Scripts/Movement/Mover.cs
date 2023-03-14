@@ -27,12 +27,18 @@ namespace com.ARTillery.Movement
         public void MoveTo(Vector3 destination)
         {
             _agent.destination = destination;
+            _agent.isStopped = false;
         }
 
         private void UpdateAnimator()
         {
             Vector3 localVelocity = transform.InverseTransformDirection(_agent.velocity);
             _animator.SetFloat("speed", localVelocity.z);
+        }
+
+        public void Stop()
+        {
+            _agent.isStopped = true;
         }
     }
 }

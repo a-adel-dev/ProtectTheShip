@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072b3fc3490ca0b4db3978086410b3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
+  _cameraTarget: {fileID: 0}
   _smoothingValue: 1.75
 --- !u!1 &7398939056381609812
 GameObject:

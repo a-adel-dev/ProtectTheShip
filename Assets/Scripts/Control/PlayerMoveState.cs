@@ -30,15 +30,12 @@ namespace com.ARTillery.Control
                 _dirtyDestination = false;
             }
 
-
             if (_player.Target is not null)
             {
-                if (Vector3.Distance(_player.transform.position, _player.Target.transform.position) <= _player.Fighter.Range)
+                if (IsInCombatRange())
                 {
-                    _player.Mover.Stop();
-                    ExitState();
-                    _player.CombatState.EnterState();
-                }   
+                    AttackTarget();
+                }
             }
 
             if (_player.Mover.IsReachedDestination())
@@ -59,13 +56,12 @@ namespace com.ARTillery.Control
                     if (hit.transform.GetComponent<CombatTarget>())
                     {
                         _player.Target = hit.transform.GetComponent<CombatTarget>();
-                        _destination = _player.Target.transform.position;
-                        _dirtyDestination = true;
+                        SetDestination( _player.Target.transform.position);
                     }
 
                     else
                     {
-                        _player.Target = null;
+                        _player.ClearCombatTarget();
                         //create empty path
                         NavMeshPath navMeshPath = new NavMeshPath();
                         //create path and check if it can be done
@@ -74,11 +70,22 @@ namespace com.ARTillery.Control
                         {
                             //move to target
                             _player.MoveState.SetDestination(hit.point);
-                            _dirtyDestination = true;
                         }
                     }
                 }
             }
+        }
+
+        private void AttackTarget()
+        {
+            _player.Mover.Stop();
+            ExitState();
+            _player.CombatState.EnterState();
+        }
+
+        private bool IsInCombatRange()
+        {
+            return Vector3.Distance(_player.transform.position, _player.Target.transform.position) <= _player.Fighter.Range;
         }
 
         public override void ExitState()

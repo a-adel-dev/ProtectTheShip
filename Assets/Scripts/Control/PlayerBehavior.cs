@@ -150,5 +150,10 @@ namespace com.ARTillery.Control
         {
             _currentState = state;
         }
+
+        public void ClearCombatTarget()
+        {
+            Target = null;
+        }
     }
 }

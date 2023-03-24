@@ -40,7 +40,7 @@ namespace com.ARTillery.Control
 
                     else
                     {
-                        ClearCombatTarget();
+                        _player.ClearCombatTarget();
                         
                         if (HasPath(hit))
                         {
@@ -64,10 +64,7 @@ namespace com.ARTillery.Control
             return _player.Agent.CalculatePath(hit.point, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
         }
 
-        private void ClearCombatTarget()
-        {
-            _player.Target = null;
-        }
+
 
         private void SetCombatTarget(RaycastHit hit)
         {

@@ -6,7 +6,7 @@ namespace com.ARTillery.Control
     public class PlayerCombatState : PlayerBaseState
     {
         private PlayerBehavior _player;
-        private CombatTarget _target;
+        private Fighter _fighter;
         public PlayerCombatState(PlayerBehavior player)
         {
             _player = player;
@@ -17,6 +17,11 @@ namespace com.ARTillery.Control
         {
             _player.SetCurrentState(this);
             Debug.Log("Entering Combat State");
+            if (_fighter is null)
+            {
+                _fighter = _player.Fighter;
+            }
+            
         }
 
         public override void UpdateState()
@@ -27,11 +32,6 @@ namespace com.ARTillery.Control
         public override void ExitState()
         {
 
-        }
-
-        public void AssignCombatTarget(CombatTarget target)
-        {
-            _target = target;
         }
 
         public override string ToString()

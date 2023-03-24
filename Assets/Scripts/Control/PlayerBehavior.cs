@@ -53,7 +53,6 @@ namespace com.ARTillery.Control
         public PlayerDeathState DeathState { get => _deathState; set => _deathState = value; }
         public NavMeshAgent Agent { get => _agent; set => _agent = value; }
         public Fighter Fighter { get => _fighter; set => _fighter = value; }
-        public CombatTarget Target { get => _target; set => _target = value; }
         public Mover Mover { get => _mover; set => _mover = value; }
 
         void Start()
@@ -96,40 +95,40 @@ namespace com.ARTillery.Control
         }
 
         
-        public bool InteractWithCombat()
-        {
-            //highlight target 
-            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-            foreach (RaycastHit hit in hits)
-            {
-                CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-                if (target is null)
-                {
-                    continue;
-                }
-                if (Input.GetMouseButton(1))
-                {
-                    Fighter.Attack(target);
-                }
-                return true;
-            }
-            return false;
-        }
+        //public bool InteractWithCombat()
+        //{
+        //    //highlight target 
+        //    RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+        //    foreach (RaycastHit hit in hits)
+        //    {
+        //        CombatTarget target = hit.transform.GetComponent<CombatTarget>();
+        //        if (target is null)
+        //        {
+        //            continue;
+        //        }
+        //        if (Input.GetMouseButton(1))
+        //        {
+        //            Fighter.Attack(target);
+        //        }
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
 
-        public bool InteractWithMovement()
-        {
-            RaycastHit hit;
-            bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
+        //public bool InteractWithMovement()
+        //{
+        //    RaycastHit hit;
+        //    bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
 
-            if (hasHit && Input.GetMouseButton(1))
-            {
-                Fighter.CancelAttack();
-                Mover.MoveTo(hit.point);
-            }
+        //    if (hasHit && Input.GetMouseButton(1))
+        //    {
+        //        Fighter.CancelAttack();
+        //        Mover.MoveTo(hit.point);
+        //    }
 
-            return hasHit;
-        }
+        //    return hasHit;
+        //}
 
         public Ray GetMouseRay()
         {
@@ -153,7 +152,27 @@ namespace com.ARTillery.Control
 
         public void ClearCombatTarget()
         {
-            Target = null;
+            _target?.ClearTargetVisual();
+            _target = null;
+        }
+
+        public void SetCombatTarget(CombatTarget target)
+        {
+            ClearCombatTarget();
+            _target = target;
+            _target.SetTargetVisual();
+        }
+
+        public CombatTarget GetCombatTarget()
+        {
+            if (_target is not null)
+            {
+                return _target;
+            }
+            else
+            {
+                return null;    
+            }
         }
     }
 }

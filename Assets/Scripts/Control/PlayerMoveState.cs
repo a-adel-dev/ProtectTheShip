@@ -30,7 +30,7 @@ namespace com.ARTillery.Control
                 _dirtyDestination = false;
             }
 
-            if (_player.Target is not null)
+            if (_player.GetCombatTarget() is not null)
             {
                 if (IsInCombatRange())
                 {
@@ -55,8 +55,9 @@ namespace com.ARTillery.Control
                 {
                     if (hit.transform.GetComponent<CombatTarget>())
                     {
-                        _player.Target = hit.transform.GetComponent<CombatTarget>();
-                        SetDestination( _player.Target.transform.position);
+                        _player.SetCombatTarget( hit.transform.GetComponent<CombatTarget>());
+                        SetDestination( _player.GetCombatTarget().transform.position);
+                        continue;
                     }
 
                     else
@@ -85,7 +86,7 @@ namespace com.ARTillery.Control
 
         private bool IsInCombatRange()
         {
-            return Vector3.Distance(_player.transform.position, _player.Target.transform.position) <= _player.Fighter.Range;
+            return Vector3.Distance(_player.transform.position, _player.GetCombatTarget().transform.position) <= _player.Fighter.Range;
         }
 
         public override void ExitState()

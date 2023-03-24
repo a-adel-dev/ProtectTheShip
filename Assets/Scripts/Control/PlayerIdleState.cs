@@ -44,17 +44,22 @@ namespace com.ARTillery.Control
                         
                         if (HasPath(hit))
                         {
-                            _player.MoveState.SetDestination(hit.point);
-                            ExitState();
-                            _player.MoveState.EnterState();
+                            MoveToTarget(hit);
                         }
                     }
                 }
             }
-            if (_player.Target is not null)
+            if (_player.GetCombatTarget() is not null)
             {
                 MoveToCombatTarget();
             }
+        }
+
+        private void MoveToTarget(RaycastHit hit)
+        {
+            _player.MoveState.SetDestination(hit.point);
+            ExitState();
+            _player.MoveState.EnterState();
         }
 
         private bool HasPath(RaycastHit hit)
@@ -68,10 +73,10 @@ namespace com.ARTillery.Control
 
         private void SetCombatTarget(RaycastHit hit)
         {
-            _player.Target = hit.transform.GetComponent<CombatTarget>();
+            _player.SetCombatTarget(hit.transform.GetComponent<CombatTarget>());
         }
 
-        private static CombatTarget IsCombatTarget(RaycastHit hit)
+        private CombatTarget IsCombatTarget(RaycastHit hit)
         {
             return hit.transform.GetComponent<CombatTarget>();
         }
@@ -79,7 +84,7 @@ namespace com.ARTillery.Control
         private void MoveToCombatTarget()
         {
             ExitState();
-            _player.MoveState.SetDestination(_player.Target.transform.position);
+            _player.MoveState.SetDestination(_player.GetCombatTarget().transform.position);
             _player.MoveState.EnterState();
         }
 

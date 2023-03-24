@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 3623212}
   - component: {fileID: 3623211}
   - component: {fileID: 3623210}
+  - component: {fileID: 3623214}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -213,13 +214,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3623209}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 4.04}
-  m_LocalScale: {x: 2.11, y: 2.11, z: 2.11}
+  m_LocalPosition: {x: -0, y: 0.95, z: 4.3737}
+  m_LocalScale: {x: 0.46490556, y: 2.4328506, z: 0.49194825}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3623214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3623209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b90aab6b1a88644ea7b92b1a043613a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &147028542
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -920,7 +933,7 @@ Transform:
   m_GameObject: {fileID: 939523804}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1213,7 +1226,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7398939055485687936, guid: d282d70ef4ce73e4eab24b3063c26daf,
         type: 3}
-      propertyPath: _player
+      propertyPath: _cameraTarget
       value: 
       objectReference: {fileID: 1126800494}
     - target: {fileID: 7398939055485687937, guid: d282d70ef4ce73e4eab24b3063c26daf,

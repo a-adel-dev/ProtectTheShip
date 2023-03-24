@@ -13,6 +13,7 @@ namespace com.ARTillery.Movement
         [SerializeField]
         private Animator _animator;
 
+
         void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
@@ -26,6 +27,7 @@ namespace com.ARTillery.Movement
 
         public void MoveTo(Vector3 destination)
         {
+            Debug.Log("setting destination");
             _agent.destination = destination;
             _agent.isStopped = false;
         }
@@ -39,6 +41,20 @@ namespace com.ARTillery.Movement
         public void Stop()
         {
             _agent.isStopped = true;
+        }
+
+        public bool IsReachedDestination()
+        {
+            return (_agent.remainingDistance <= _agent.stoppingDistance);
+        }
+
+
+        private void OnDrawGizmos()
+        {
+            if (Application.isPlaying)
+            {
+                Gizmos.DrawLine(transform.position, _agent.destination);
+            }
         }
     }
 }

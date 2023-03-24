@@ -12,6 +12,8 @@ namespace com.ARTillery.Combat
 
         private CombatTarget _target;
 
+        public float Range { get => range; set => range = value; }
+
         private void Update()
         {
             if (_target == null) return;
@@ -27,7 +29,7 @@ namespace com.ARTillery.Combat
 
         private bool GetIsOutOfRange()
         {
-            return Vector3.Distance(transform.position, _target.transform.position) >= range;
+            return Vector3.Distance(transform.position, _target.transform.position) >= Range;
         }
 
         public void Attack(CombatTarget target)

@@ -33,21 +33,17 @@ namespace com.ARTillery.Control
                 }
                 foreach (RaycastHit hit in hits)
                 {
-                    if (hit.transform.GetComponent<CombatTarget>())
+                    if (IsCombatTarget(hit))
                     {
-                        _player.Target = hit.transform.GetComponent<CombatTarget>();
+                        SetCombatTarget(hit);
                     }
 
                     else
                     {
-                        _player.Target = null;
-                        //create empty path
-                        NavMeshPath navMeshPath = new NavMeshPath();
-                        //create path and check if it can be done
-                        // and check if navMeshAgent can reach its target
-                        if (_player.Agent.CalculatePath(hit.point, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+                        ClearCombatTarget();
+                        
+                        if (HasPath(hit))
                         {
-                            //move to target
                             _player.MoveState.SetDestination(hit.point);
                             ExitState();
                             _player.MoveState.EnterState();
@@ -55,13 +51,39 @@ namespace com.ARTillery.Control
                     }
                 }
             }
-
             if (_player.Target is not null)
             {
-                ExitState();
-                _player.MoveState.SetDestination(_player.Target.transform.position);
-                _player.MoveState.EnterState();
+                MoveToCombatTarget();
             }
+        }
+
+        private bool HasPath(RaycastHit hit)
+
+        {
+            var navMeshPath = new NavMeshPath();
+            return _player.Agent.CalculatePath(hit.point, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
+        }
+
+        private void ClearCombatTarget()
+        {
+            _player.Target = null;
+        }
+
+        private void SetCombatTarget(RaycastHit hit)
+        {
+            _player.Target = hit.transform.GetComponent<CombatTarget>();
+        }
+
+        private static CombatTarget IsCombatTarget(RaycastHit hit)
+        {
+            return hit.transform.GetComponent<CombatTarget>();
+        }
+
+        private void MoveToCombatTarget()
+        {
+            ExitState();
+            _player.MoveState.SetDestination(_player.Target.transform.position);
+            _player.MoveState.EnterState();
         }
 
         public override void ExitState()

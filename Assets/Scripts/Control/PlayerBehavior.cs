@@ -81,54 +81,11 @@ namespace com.ARTillery.Control
         private void Update()
         {
             _currentState.UpdateState();
-            _currentStateName = _currentState.ToString();
-            //if (InteractWithCombat())
-            //{
-            //    return;
-            //}
-            //if (InteractWithMovement())
-            //{
-            //    return;
-            //}
-            //print("nothing to do");
-            
+            _currentStateName = _currentState.ToString();         
         }
 
         
-        //public bool InteractWithCombat()
-        //{
-        //    //highlight target 
-        //    RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-        //    foreach (RaycastHit hit in hits)
-        //    {
-        //        CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-        //        if (target is null)
-        //        {
-        //            continue;
-        //        }
-        //        if (Input.GetMouseButton(1))
-        //        {
-        //            Fighter.Attack(target);
-        //        }
-        //        return true;
-        //    }
-        //    return false;
-        //}
 
-
-        //public bool InteractWithMovement()
-        //{
-        //    RaycastHit hit;
-        //    bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
-
-        //    if (hasHit && Input.GetMouseButton(1))
-        //    {
-        //        Fighter.CancelAttack();
-        //        Mover.MoveTo(hit.point);
-        //    }
-
-        //    return hasHit;
-        //}
 
         public Ray GetMouseRay()
         {

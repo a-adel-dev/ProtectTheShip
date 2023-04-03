@@ -1,7 +1,5 @@
 ﻿using com.ARTillery.Combat;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace com.ARTillery.Control
 {
@@ -37,40 +35,34 @@ namespace com.ARTillery.Control
                     AttackTarget();
                 }
             }
-
-            if (_player.Mover.IsReachedDestination())
+            else
             {
-                _player.IdleState.EnterState();
+                if (_player.Mover.IsReachedDestination())
+                {
+                    _player.IdleState.EnterState();
+                }
             }
 
             if (Input.GetMouseButton(1))
             {
-                RaycastHit[] hits = Physics.RaycastAll(_player.GetMouseRay());
-                if (hits.Length == 0)
+                RaycastHit[] hits;
+                if (_player.IsCursorHit(out hits))
                 {
-                    Debug.Log("nothing to do");
-                    return;
-                }
-                foreach (RaycastHit hit in hits)
-                {
-                    if (hit.transform.GetComponent<CombatTarget>())
+                    CombatTarget target;
+                    if (_player.DetectCombatTarget(hits, out target))
                     {
-                        _player.SetCombatTarget( hit.transform.GetComponent<CombatTarget>());
-                        SetDestination( _player.GetCombatTarget().transform.position);
-                        continue;
+                        _player.SetCombatTarget(target);
+                        SetDestination(target.transform.position);
                     }
-
                     else
                     {
                         _player.ClearCombatTarget();
-                        //create empty path
-                        NavMeshPath navMeshPath = new NavMeshPath();
-                        //create path and check if it can be done
-                        // and check if navMeshAgent can reach its target
-                        if (_player.Agent.CalculatePath(hit.point, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+                        foreach (RaycastHit hit in hits)
                         {
-                            //move to target
-                            _player.MoveState.SetDestination(hit.point);
+                            if (_player.Mover.HasPath(hit.point))
+                            {
+                                SetDestination(hit.point);
+                            }
                         }
                     }
                 }

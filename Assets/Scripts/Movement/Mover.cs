@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 
 namespace com.ARTillery.Movement
@@ -27,7 +28,6 @@ namespace com.ARTillery.Movement
 
         public void MoveTo(Vector3 destination)
         {
-            Debug.Log("setting destination");
             _agent.destination = destination;
             _agent.isStopped = false;
         }
@@ -55,6 +55,12 @@ namespace com.ARTillery.Movement
             {
                 Gizmos.DrawLine(transform.position, _agent.destination);
             }
+        }
+
+        public bool HasPath(Vector3 position)
+        {
+            var navMeshPath = new NavMeshPath();
+            return _agent.CalculatePath(position, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
         }
     }
 }

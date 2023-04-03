@@ -85,12 +85,27 @@ namespace com.ARTillery.Control
         {
             _currentState.UpdateState();
             _currentStateName = _currentState.ToString();
+            InteractWithCombatCursor();
 
-            DetectCombatTarget();
         }
 
-
-
+        private void InteractWithCombatCursor()
+        {
+            RaycastHit[] hits;
+            CombatTarget target;
+            if (IsCursorHit(out hits))
+            {
+                if (DetectCombatTarget(hits, out target))
+                {
+                    DisplayCombatCursor();
+                }
+                else
+                {
+                    _combatCursor.gameObject.SetActive(false);
+                    Cursor.visible = true;
+                }
+            }
+        }
 
         public Ray GetMouseRay()
         {
@@ -114,6 +129,7 @@ namespace com.ARTillery.Control
 
         public void ClearCombatTarget()
         {
+            Debug.Log("clearing combat target");
             _target?.ClearTargetVisual();
             _target = null;
         }
@@ -137,31 +153,35 @@ namespace com.ARTillery.Control
             }
         }
 
-        public void DetectCombatTarget()
+        public bool DetectCombatTarget(RaycastHit[] hits, out CombatTarget target)
         {
-            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            CombatTarget combatTarget = null;
             bool combatTargetPresent = false;
-            if (hits.Length == 0)
-            {
-                Debug.Log("nothing to do");
-                return;
-            }
             foreach (RaycastHit hit in hits)
             {
                 if (hit.transform.GetComponent<CombatTarget>())
                 {
+                    combatTarget = hit.transform.GetComponent<CombatTarget>();
                     combatTargetPresent = true;
                 }
             }
+            target = combatTarget;
+            return combatTargetPresent;
+        }
 
-            if (combatTargetPresent)
+        public bool IsCursorHit(out RaycastHit[] targetHits)
+        {
+            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            if (hits.Length == 0)
             {
-                DisplayCombatCursor();
+                Debug.Log("nothing to do");
+                targetHits = null;
+                return false;
             }
             else
             {
-                _combatCursor.gameObject.SetActive(false);
-                Cursor.visible = true;
+                targetHits = hits;
+                return true;
             }
         }
 

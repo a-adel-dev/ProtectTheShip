@@ -174,7 +174,7 @@ namespace com.ARTillery.Control
             RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
             if (hits.Length == 0)
             {
-                Debug.Log("nothing to do");
+                //Debug.Log("nothing to do");
                 targetHits = null;
                 return false;
             }

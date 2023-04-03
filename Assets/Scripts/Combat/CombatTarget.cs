@@ -1,5 +1,4 @@
 ﻿using com.ARTillery.Core;
-using System.Collections;
 using UnityEngine;
 
 namespace com.ARTillery.Combat
@@ -12,6 +11,9 @@ namespace com.ARTillery.Combat
         private StatCollection _statCollection;
         [SerializeField]
         private Renderer _renderer;
+
+        [SerializeField]
+        private HealthBar _healthBar;
 
         private Points _health;
         private float _speed;
@@ -30,6 +32,8 @@ namespace com.ARTillery.Combat
             }
 
             FillStats();
+            _healthBar.SetMaxHealth(_health.MaxPoints);
+            _healthBar.SetHealth(_health.MaxPoints);
         }
 
 
@@ -57,6 +61,9 @@ namespace com.ARTillery.Combat
         {
             int realDamage = damageValue - _armor;
             _health.ReducePoints(realDamage);
+            //update health bar
+            _healthBar.SetHealth(_health.CurrentPoints);
+            //display floating text
             if (_health.IsOutOfPoints())
             {
                 //die

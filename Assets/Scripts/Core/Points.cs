@@ -20,7 +20,7 @@ namespace com.ARTillery.Core
 
         public void ReducePoints(int value)
         {
-            CurrentPoints = Mathf.Min( CurrentPoints - value , 0);
+            CurrentPoints = Mathf.Max( CurrentPoints - value , 0);
         }
 
         public void ResetPoints()
@@ -30,13 +30,9 @@ namespace com.ARTillery.Core
 
         public void AddPoints(int value)
         {
-            CurrentPoints = Mathf.Max(CurrentPoints + value, MaxPoints);
+            CurrentPoints = Mathf.Min(CurrentPoints + value, MaxPoints);
         }
 
-        public int GetCurrentPoints()
-        {
-            return CurrentPoints;
-        }
 
         public bool IsOutOfPoints()
         {

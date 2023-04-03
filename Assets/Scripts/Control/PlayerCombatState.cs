@@ -1,6 +1,5 @@
 ﻿using com.ARTillery.Combat;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace com.ARTillery.Control
 {
@@ -13,49 +12,37 @@ namespace com.ARTillery.Control
         public PlayerCombatState(PlayerBehavior player)
         {
             _player = player;
-            
         }
 
         public override void EnterState()
         {
             _player.SetCurrentState(this);
             Debug.Log("Entering Combat State");
-            if (_fighter is null)
-            {
-                _fighter = _player.Fighter;
-            }
-            
+            _fighter ??= _player.Fighter; // if fighter is null, re-assign it
         }
 
         public override void UpdateState()
         {
-            
-
-
             if (Input.GetMouseButton(1))
             {
-                RaycastHit[] hits = Physics.RaycastAll(_player.GetMouseRay());
-                if (hits.Length == 0)
+                RaycastHit[] hits;
+                if (_player.IsCursorHit(out hits))
                 {
-                    Debug.Log("nothing to do");
-                    return;
-                }
-                foreach (RaycastHit hit in hits)
-                {
-                    if (IsCombatTarget(hit))
+                    CombatTarget target;
+                    if (_player.DetectCombatTarget(hits, out target))
                     {
-                        SetCombatTarget(hit);
+                        _player.SetCombatTarget(target);
+                        MoveToTarget(target.transform.position);
                     }
-
                     else
                     {
                         _player.ClearCombatTarget();
-
-                        if (HasPath(hit))
+                        foreach (RaycastHit hit in hits)
                         {
-                            _player.MoveState.SetDestination(hit.point);
-                            ExitState();
-                            _player.MoveState.EnterState();
+                            if (_player.Mover.HasPath(hit.point))
+                            {
+                                MoveToTarget(hit.point);
+                            }
                         }
                     }
                 }
@@ -63,6 +50,7 @@ namespace com.ARTillery.Control
 
             if (_player.GetCombatTarget() is null)
             {
+                _timer = float.MaxValue;
                 return;
             }
 
@@ -81,36 +69,11 @@ namespace com.ARTillery.Control
 
         }
 
-        private CombatTarget IsCombatTarget(RaycastHit hit)
+        private void MoveToTarget(Vector3 position)
         {
-            return hit.transform.GetComponent<CombatTarget>();
-        }
-
-        private void SetCombatTarget(RaycastHit hit)
-        {
-            if (_player.GetCombatTarget() == hit.transform.GetComponent<CombatTarget>())
-            {
-                return;
-            }
-            else
-            {
-                _player.SetCombatTarget( hit.transform.GetComponent<CombatTarget>());
-                MoveToCombatTarget();
-            }
-        }
-
-        private void MoveToCombatTarget()
-        {
+            _player.MoveState.SetDestination(position);
             ExitState();
-            _player.MoveState.SetDestination(_player.GetCombatTarget().transform.position);
             _player.MoveState.EnterState();
-        }
-
-        private bool HasPath(RaycastHit hit)
-
-        {
-            var navMeshPath = new NavMeshPath();
-            return _player.Agent.CalculatePath(hit.point, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
         }
 
         public override string ToString()

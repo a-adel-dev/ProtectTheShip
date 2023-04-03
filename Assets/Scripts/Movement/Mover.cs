@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 
 namespace com.ARTillery.Movement
@@ -12,6 +13,7 @@ namespace com.ARTillery.Movement
         private NavMeshAgent _agent;
         [SerializeField]
         private Animator _animator;
+
 
         void Start()
         {
@@ -39,6 +41,26 @@ namespace com.ARTillery.Movement
         public void Stop()
         {
             _agent.isStopped = true;
+        }
+
+        public bool IsReachedDestination()
+        {
+            return (_agent.remainingDistance <= _agent.stoppingDistance);
+        }
+
+
+        private void OnDrawGizmos()
+        {
+            if (Application.isPlaying)
+            {
+                Gizmos.DrawLine(transform.position, _agent.destination);
+            }
+        }
+
+        public bool HasPath(Vector3 position)
+        {
+            var navMeshPath = new NavMeshPath();
+            return _agent.CalculatePath(position, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
         }
     }
 }

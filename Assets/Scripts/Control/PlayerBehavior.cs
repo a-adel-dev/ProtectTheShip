@@ -1,14 +1,19 @@
 using com.ARTillery.Combat;
 using com.ARTillery.Movement;
 using System;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 
 namespace com.ARTillery.Control
 {
     public class PlayerBehavior : MonoBehaviour
     {
+
+        [SerializeField]
+        private string _currentStateName;
 
         [SerializeField]
         private int _harvestValue = 10;
@@ -26,68 +31,166 @@ namespace com.ARTillery.Control
         [SerializeField]
         private LayerMask _interactableLayer;
 
+        [SerializeField]
+        private Transform _combatCursor;
+
         private Mover _mover;
         private Fighter _fighter;
+        private CombatTarget _target;
 
+
+        private PlayerBaseState _currentState;
+
+        private PlayerIdleState _idleState;
+        private PlayerMoveState _moveState;
+        private PlayerCombatState _CombatState;
+        private PlayerGatherState _gatherState;
+        private PlayerBuildState _buildState;
+        private PlayerDeathState _deathState;
+
+        public PlayerIdleState IdleState { get => _idleState; set => _idleState = value; }
+        public PlayerMoveState MoveState { get => _moveState; set => _moveState = value; }
+        public PlayerCombatState CombatState { get => _CombatState; set => _CombatState = value; }
+        public PlayerGatherState GatherState { get => _gatherState; set => _gatherState = value; }
+        public PlayerBuildState BuildState { get => _buildState; set => _buildState = value; }
+        public PlayerDeathState DeathState { get => _deathState; set => _deathState = value; }
+        public NavMeshAgent Agent { get => _agent; set => _agent = value; }
+        public Fighter Fighter { get => _fighter; set => _fighter = value; }
+        public Mover Mover { get => _mover; set => _mover = value; }
 
         void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
-            _mover = GetComponent<Mover>();
-            _fighter = GetComponent<Fighter>();
+            Mover = GetComponent<Mover>();
+            Fighter = GetComponent<Fighter>();
+
+            _idleState = new PlayerIdleState(this);
+            _moveState = new PlayerMoveState(this);
+            _CombatState = new PlayerCombatState(this);
+            _gatherState = new PlayerGatherState(this);
+            _buildState = new PlayerBuildState(this);
+            _deathState = new PlayerDeathState(this);
+
+            _currentState = IdleState;
+            EnterState(_currentState);
+        }
+
+        public void EnterState(PlayerBaseState state)
+        {
+            state.EnterState();
+            Debug.Log("changing state");
         }
 
         private void Update()
         {
-            if (InteractWithCombat())
-            {
-                return;
-            }
-            if (InteractWithMovement())
-            {
-                return;
-            }
-            print("nothing to do");
+            _currentState.UpdateState();
+            _currentStateName = _currentState.ToString();
+            InteractWithCombatCursor();
+
         }
 
-        private bool InteractWithCombat()
+        private void InteractWithCombatCursor()
         {
-            //highlight target 
-            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-            foreach (RaycastHit hit in hits)
+            RaycastHit[] hits;
+            CombatTarget target;
+            if (IsCursorHit(out hits))
             {
-                CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-                if (target is null)
+                if (DetectCombatTarget(hits, out target))
                 {
-                    continue;
+                    DisplayCombatCursor();
                 }
-                if (Input.GetMouseButton(1))
+                else
                 {
-                    _fighter.Attack(target);
+                    _combatCursor.gameObject.SetActive(false);
+                    Cursor.visible = true;
                 }
-                return true;
             }
-            return false;
         }
 
-
-        private bool InteractWithMovement()
-        {
-            RaycastHit hit;
-            bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
-
-            if (hasHit && Input.GetMouseButton(1))
-            {
-                _fighter.CancelAttack();
-                _mover.MoveTo(hit.point);
-            }
-
-            return hasHit;
-        }
-
-        private static Ray GetMouseRay()
+        public Ray GetMouseRay()
         {
             return Camera.main.ScreenPointToRay(Input.mousePosition);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (Application.isPlaying)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(MoveState.GetDestination(), 1);
+            }
+
+        }
+
+        public void SetCurrentState(PlayerBaseState state)
+        {
+            _currentState = state;
+        }
+
+        public void ClearCombatTarget()
+        {
+            Debug.Log("clearing combat target");
+            _target?.ClearTargetVisual();
+            _target = null;
+        }
+
+        public void SetCombatTarget(CombatTarget target)
+        {
+            ClearCombatTarget();
+            _target = target;
+            _target.SetTargetVisual();
+        }
+
+        public CombatTarget GetCombatTarget()
+        {
+            if (_target is not null)
+            {
+                return _target;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public bool DetectCombatTarget(RaycastHit[] hits, out CombatTarget target)
+        {
+            CombatTarget combatTarget = null;
+            bool combatTargetPresent = false;
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.transform.GetComponent<CombatTarget>())
+                {
+                    combatTarget = hit.transform.GetComponent<CombatTarget>();
+                    combatTargetPresent = true;
+                }
+            }
+            target = combatTarget;
+            return combatTargetPresent;
+        }
+
+        public bool IsCursorHit(out RaycastHit[] targetHits)
+        {
+            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            if (hits.Length == 0)
+            {
+                Debug.Log("nothing to do");
+                targetHits = null;
+                return false;
+            }
+            else
+            {
+                targetHits = hits;
+                return true;
+            }
+        }
+
+
+        private void DisplayCombatCursor()
+        {
+            _combatCursor.gameObject.SetActive(true);
+            Cursor.visible = false;
+            _combatCursor.position = Input.mousePosition;
         }
     }
 }

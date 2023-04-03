@@ -8,37 +8,22 @@ namespace com.ARTillery.Combat
     {
 
         [SerializeField]
-        private float range = 2f;
+        private float _range = 2f;
 
-        private CombatTarget _target;
+        [SerializeField]
+        private float _attackRate = 0.5f;
+
+        [SerializeField]
+        private int _attackPower = 5;
+
+        public float Range { get => _range; set => _range = value; }
+        public float AttackRate { get => _attackRate; set => _attackRate = value; }
+        public int AttackPower { get => _attackPower; set => _attackPower = value; }
 
         private void Update()
         {
-            if (_target == null) return;
-            if (GetIsOutOfRange())
-            {
-                GetComponent<Mover>().MoveTo(_target.transform.position);
-            }
-            else
-            {
-                GetComponent<Mover>().Stop();
-            }
+
         }
 
-        private bool GetIsOutOfRange()
-        {
-            return Vector3.Distance(transform.position, _target.transform.position) >= range;
-        }
-
-        public void Attack(CombatTarget target)
-        {
-            _target = target;
-            Debug.Log($"Attacking {target.name}");
-        }
-
-        public void CancelAttack()
-        {
-            _target = null;
-        }
     }
 }

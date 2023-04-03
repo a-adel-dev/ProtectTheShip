@@ -31,6 +31,9 @@ namespace com.ARTillery.Control
         [SerializeField]
         private LayerMask _interactableLayer;
 
+        [SerializeField]
+        private Transform _combatCursor;
+
         private Mover _mover;
         private Fighter _fighter;
         private CombatTarget _target;
@@ -61,12 +64,12 @@ namespace com.ARTillery.Control
             Mover = GetComponent<Mover>();
             Fighter = GetComponent<Fighter>();
 
-             _idleState = new PlayerIdleState(this);
-             _moveState = new PlayerMoveState(this);
-             _CombatState = new PlayerCombatState(this);
-             _gatherState = new PlayerGatherState(this);
-             _buildState = new PlayerBuildState(this);
-             _deathState = new PlayerDeathState(this);
+            _idleState = new PlayerIdleState(this);
+            _moveState = new PlayerMoveState(this);
+            _CombatState = new PlayerCombatState(this);
+            _gatherState = new PlayerGatherState(this);
+            _buildState = new PlayerBuildState(this);
+            _deathState = new PlayerDeathState(this);
 
             _currentState = IdleState;
             EnterState(_currentState);
@@ -81,10 +84,12 @@ namespace com.ARTillery.Control
         private void Update()
         {
             _currentState.UpdateState();
-            _currentStateName = _currentState.ToString();         
+            _currentStateName = _currentState.ToString();
+
+            DetectCombatTarget();
         }
 
-        
+
 
 
         public Ray GetMouseRay()
@@ -99,7 +104,7 @@ namespace com.ARTillery.Control
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(MoveState.GetDestination(), 1);
             }
-            
+
         }
 
         public void SetCurrentState(PlayerBaseState state)
@@ -128,8 +133,44 @@ namespace com.ARTillery.Control
             }
             else
             {
-                return null;    
+                return null;
             }
+        }
+
+        public void DetectCombatTarget()
+        {
+            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            bool combatTargetPresent = false;
+            if (hits.Length == 0)
+            {
+                Debug.Log("nothing to do");
+                return;
+            }
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.transform.GetComponent<CombatTarget>())
+                {
+                    combatTargetPresent = true;
+                }
+            }
+
+            if (combatTargetPresent)
+            {
+                DisplayCombatCursor();
+            }
+            else
+            {
+                _combatCursor.gameObject.SetActive(false);
+                Cursor.visible = true;
+            }
+        }
+
+
+        private void DisplayCombatCursor()
+        {
+            _combatCursor.gameObject.SetActive(true);
+            Cursor.visible = false;
+            _combatCursor.position = Input.mousePosition;
         }
     }
 }

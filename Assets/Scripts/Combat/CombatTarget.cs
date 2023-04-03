@@ -10,12 +10,15 @@ namespace com.ARTillery.Combat
         private Material _targetHighlightMaterial;
         [SerializeField]
         private StatCollection _statCollection;
+        [SerializeField]
+        private Renderer _renderer;
 
         private Points _health;
         private float _speed;
         private int _attackPower;
         private int _armor;
         private float _attackRate;
+
 
         private Material _originalMaterial;
 
@@ -32,13 +35,13 @@ namespace com.ARTillery.Combat
 
         public void SetTargetVisual()
         {
-            _originalMaterial = GetComponent<Renderer>().material;
-            GetComponent<Renderer>().material = _targetHighlightMaterial;
+            _originalMaterial = _renderer.material;
+            _renderer.material = _targetHighlightMaterial;
         }
 
         public void ClearTargetVisual()
         {
-            GetComponent<Renderer>().material = _originalMaterial;
+            _renderer.material = _originalMaterial;
         }
 
         private void FillStats()

@@ -1656,6 +1656,11 @@ PrefabInstance:
       propertyPath: _combatCursor
       value: 
       objectReference: {fileID: 1498346031}
+    - target: {fileID: 9001370562659967752, guid: 592ac42e64d24e54ebb8a33d78d89eee,
+        type: 3}
+      propertyPath: _gatheringRange
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 9001370562659967765, guid: 592ac42e64d24e54ebb8a33d78d89eee,
         type: 3}
       propertyPath: m_RootOrder

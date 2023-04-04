@@ -35,6 +35,7 @@ namespace com.ARTillery.Control
                         MoveToTarget(target.transform.position);
                         break;
                     case TargetType.ResourceNode:
+                        _player.ClearCombatTarget();
                         _player.SetResourceNode(target.transform.GetComponent<ResourceNode>());
                         MoveToTarget(target.transform.position);
                         break;

@@ -1,4 +1,6 @@
 ﻿using com.ARTillery.Combat;
+using com.ARTillery.Core;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 namespace com.ARTillery.Control
@@ -24,26 +26,23 @@ namespace com.ARTillery.Control
         {
             if (Input.GetMouseButton(1))
             {
-                RaycastHit[] hits;
-                if (_player.IsCursorHit(out hits))
+                TargetType targetType = ClickTargetFinder.GetClickTargetType(out RaycastHit target);
+                Debug.Log(target.transform.gameObject.name);
+                switch (targetType)
                 {
-                    CombatTarget target;
-                    if (_player.DetectCombatTarget(hits, out target))
-                    {
-                        _player.SetCombatTarget(target);
+                    case TargetType.CombatTarget:
+                        _player.SetCombatTarget(target.transform.GetComponent<CombatTarget>());
                         MoveToTarget(target.transform.position);
-                    }
-                    else
-                    {
+                        break;
+                    case TargetType.ResourceNode:
+                        //designate resourceNode
+                        MoveToTarget(target.transform.position);
+                        break;
+                    case TargetType.ReachableLocation:
                         _player.ClearCombatTarget();
-                        foreach (RaycastHit hit in hits)
-                        {
-                            if (_player.Mover.HasPath(hit.point))
-                            {
-                                MoveToTarget(hit.point);
-                            }
-                        }
-                    }
+                        //clearGathering Node
+                        MoveToTarget(target.point);
+                        break;
                 }
             }
         }
@@ -54,7 +53,6 @@ namespace com.ARTillery.Control
             ExitState();
             _player.MoveState.EnterState();
         }
-
 
         public override void ExitState()
         {

@@ -35,12 +35,12 @@ namespace com.ARTillery.Control
                         MoveToTarget(target.transform.position);
                         break;
                     case TargetType.ResourceNode:
-                        //designate resourceNode
+                        _player.SetResourceNode(target.transform.GetComponent<ResourceNode>());
                         MoveToTarget(target.transform.position);
                         break;
                     case TargetType.ReachableLocation:
                         _player.ClearCombatTarget();
-                        //clearGathering Node
+                        _player.ClearResourceNode();
                         MoveToTarget(target.point);
                         break;
                 }

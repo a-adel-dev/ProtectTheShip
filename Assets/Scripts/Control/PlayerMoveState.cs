@@ -1,4 +1,5 @@
 ﻿using com.ARTillery.Combat;
+using com.ARTillery.Core;
 using UnityEngine;
 
 namespace com.ARTillery.Control
@@ -35,36 +36,40 @@ namespace com.ARTillery.Control
                     AttackTarget();
                 }
             }
-            else
+
+            if (_player.ResourceNode is not null)
             {
-                if (_player.Mover.IsReachedDestination())
+                if (IsInGatheringRange())
                 {
-                    _player.IdleState.EnterState();
+                    GatherResource();
                 }
             }
 
+            if (_player.Mover.IsReachedDestination())
+            {
+                _player.IdleState.EnterState();
+            }
+
+
             if (Input.GetMouseButton(1))
             {
-                RaycastHit[] hits;
-                if (_player.IsCursorHit(out hits))
+                TargetType targetType = ClickTargetFinder.GetClickTargetType(out RaycastHit target);
+                Debug.Log(target.transform.gameObject.name);
+                switch (targetType)
                 {
-                    CombatTarget target;
-                    if (_player.DetectCombatTarget(hits, out target))
-                    {
-                        _player.SetCombatTarget(target);
+                    case TargetType.CombatTarget:
+                        _player.SetCombatTarget(target.transform.GetComponent<CombatTarget>());
                         SetDestination(target.transform.position);
-                    }
-                    else
-                    {
+                        break;
+                    case TargetType.ResourceNode:
+                        _player.SetResourceNode(target.transform.GetComponent<ResourceNode>());
+                        SetDestination(target.transform.position);
+                        break;
+                    case TargetType.ReachableLocation:
                         _player.ClearCombatTarget();
-                        foreach (RaycastHit hit in hits)
-                        {
-                            if (_player.Mover.HasPath(hit.point))
-                            {
-                                SetDestination(hit.point);
-                            }
-                        }
-                    }
+                        _player.ClearResourceNode();
+                        SetDestination(target.point);
+                        break;
                 }
             }
         }
@@ -76,9 +81,21 @@ namespace com.ARTillery.Control
             _player.CombatState.EnterState();
         }
 
+        private void GatherResource()
+        {
+            _player.Mover.Stop();
+            ExitState();
+            _player.GatherState.EnterState();
+        }
+
         private bool IsInCombatRange()
         {
             return Vector3.Distance(_player.transform.position, _player.GetCombatTarget().transform.position) <= _player.Fighter.Range;
+        }
+
+        private bool IsInGatheringRange()
+        {
+            return Vector3.Distance(_player.transform.position, _player.ResourceNode.transform.position) <= _player.GatheringRange;
         }
 
         public override void ExitState()

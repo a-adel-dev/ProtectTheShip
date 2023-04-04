@@ -1,4 +1,6 @@
-﻿namespace com.ARTillery.Control
+﻿using UnityEngine;
+
+namespace com.ARTillery.Control
 {
     public class PlayerGatherState : PlayerBaseState
     {
@@ -10,7 +12,8 @@
 
         public void EnterState()
         {
-
+            Debug.Log($"Entering Gather State");
+            _player.SetCurrentState(this);
         }
 
         public void UpdateState()

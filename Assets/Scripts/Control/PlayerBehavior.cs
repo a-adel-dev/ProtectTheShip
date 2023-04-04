@@ -34,9 +34,13 @@ namespace com.ARTillery.Control
         [SerializeField]
         private Transform _combatCursor;
 
+        [SerializeField]
+        private float _gatheringRange = 0.5f;
+
         private Mover _mover;
         private Fighter _fighter;
         private CombatTarget _target;
+        private ResourceNode _resourceNode;
 
 
         private PlayerBaseState _currentState;
@@ -57,6 +61,8 @@ namespace com.ARTillery.Control
         public NavMeshAgent Agent { get => _agent; set => _agent = value; }
         public Fighter Fighter { get => _fighter; set => _fighter = value; }
         public Mover Mover { get => _mover; set => _mover = value; }
+        public ResourceNode ResourceNode { get => _resourceNode; set => _resourceNode = value; }
+        public float GatheringRange { get => _gatheringRange; set => _gatheringRange = value; }
 
         void Start()
         {
@@ -129,7 +135,6 @@ namespace com.ARTillery.Control
 
         public void ClearCombatTarget()
         {
-            Debug.Log("clearing combat target");
             _target?.ClearTargetVisual();
             _target = null;
         }
@@ -139,6 +144,17 @@ namespace com.ARTillery.Control
             ClearCombatTarget();
             _target = target;
             _target.SetTargetVisual();
+        }
+
+        public void ClearResourceNode()
+        {
+            _resourceNode = null;
+        }
+
+        public void SetResourceNode(ResourceNode target)
+        {
+            ClearResourceNode();
+            _resourceNode = target;
         }
 
         public CombatTarget GetCombatTarget()

@@ -8,7 +8,7 @@ namespace com.ARTillery.Control
     {
         private PlayerBehavior _player;
         private Fighter _fighter;
-        private float _timer = float.MaxValue;
+        private float _timer;
 
         public PlayerCombatState(PlayerBehavior player)
         {
@@ -20,6 +20,7 @@ namespace com.ARTillery.Control
             _player.SetCurrentState(this);
             Debug.Log("Entering Combat State");
             _fighter ??= _player.Fighter; // if fighter is null, re-assign it
+            _timer = float.MaxValue;
         }
 
         public override void UpdateState()
@@ -47,15 +48,10 @@ namespace com.ARTillery.Control
                 }
             }
 
-            if (_player.GetCombatTarget() is null)
-            {
-                _timer = float.MaxValue;
-                return;
-            }
-
             if (_timer >= _fighter.AttackRate)
             {
                 _player.GetCombatTarget().TakeDamage(_fighter.AttackPower);
+                //TODO: check if target is dead to get out of state
                 _timer = 0;
                 Debug.Log("Attacking!");
             }

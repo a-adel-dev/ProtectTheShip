@@ -11,37 +11,35 @@ namespace com.ARTillery.Control
 {
     public class PlayerBehavior : MonoBehaviour
     {
-
+        [Header("Setup")]
         [SerializeField]
         private string _currentStateName;
 
         [SerializeField]
-        private int _harvestValue = 10;
-
-        [SerializeField]
-        private int weaponPower = 10;
-
-        [SerializeField]
-        private float _harvestingTimer = 2f;
-
-        private NavMeshAgent _agent;
-        [SerializeField]
         private Animator _animator;
-
-        [SerializeField]
-        private LayerMask _interactableLayer;
 
         [SerializeField]
         private Transform _combatCursor;
 
+        [Header("Combat")]
+        [SerializeField]
+        private int weaponPower = 10;
+
+        [Header("Gathering")]
         [SerializeField]
         private float _gatheringRange = 0.5f;
+
+        [SerializeField]
+        private int _gatheringPower = 5;
+
+        [SerializeField]
+        private float _gatheringRate = 0.5f;
 
         private Mover _mover;
         private Fighter _fighter;
         private CombatTarget _target;
         private ResourceNode _resourceNode;
-
+        private NavMeshAgent _agent;
 
         private PlayerBaseState _currentState;
 
@@ -63,6 +61,8 @@ namespace com.ARTillery.Control
         public Mover Mover { get => _mover; set => _mover = value; }
         public ResourceNode ResourceNode { get => _resourceNode; set => _resourceNode = value; }
         public float GatheringRange { get => _gatheringRange; set => _gatheringRange = value; }
+        public float GatheringRate { get => _gatheringRate; set => _gatheringRate = value; }
+        public int GatheringPower { get => _gatheringPower; set => _gatheringPower = value; }
 
         void Start()
         {
@@ -155,6 +155,11 @@ namespace com.ARTillery.Control
         {
             ClearResourceNode();
             _resourceNode = target;
+        }
+
+        public ResourceNode GetResourceNode()
+        {
+            return ResourceNode;
         }
 
         public CombatTarget GetCombatTarget()

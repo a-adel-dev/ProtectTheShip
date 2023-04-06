@@ -1,3 +1,4 @@
+using com.Artillery.UI;
 using System;
 using UnityEngine;
 
@@ -5,11 +6,13 @@ public class ResourceNode : MonoBehaviour
 {
     [SerializeField]
     private int resourceValue = 100;
-    public Action OnDestroy;
+
+    private bool _isResourceExhusted = false;
     
 
     public GameObject GameObject => gameObject;
 
+    public bool IsResourceExhusted { get => _isResourceExhusted; set => _isResourceExhusted = value; }
 
     public int HarvestNode(int value)
     {
@@ -21,14 +24,13 @@ public class ResourceNode : MonoBehaviour
         }
         else
         {
-            DestroyNode();
+            IsResourceExhusted = true;
             return resourceValue;
         }
     }
 
     public void DestroyNode()
     {
-        OnDestroy?.Invoke();
         Destroy(gameObject, 0.5f);   
     }
 

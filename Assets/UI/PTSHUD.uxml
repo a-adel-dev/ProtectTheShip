@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/resourceLabel.uss?fileID=7433441132597879392&amp;guid=e8e1343c1b9d71d4296b3c381b406c3c&amp;type=3#resourceLabel" />
+    <Style src="project://database/Assets/UI/ResourceValue.uss?fileID=7433441132597879392&amp;guid=21ec30abf02ce9748b66548d28527a74&amp;type=3#ResourceValue" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement name="Resources" style="flex-direction: row; height: 40px; justify-content: flex-start; align-items: center; padding-left: 20px; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+    </ui:VisualElement>
+</ui:UXML>

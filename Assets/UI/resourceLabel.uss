@@ -1,0 +1,29 @@
+.ResourceLabel {
+    font-size: 15px;
+    margin-left: 0;
+    margin-right: 2px;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 255);
+}
+
+.ResourceValue {
+    font-size: 15px;
+    margin-left: 2px;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: rgba(226, 136, 0, 255);
+}
+
+.Resource {
+    font-size: 15px;
+    margin-left: 2px;
+    margin-right: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    color: rgb(226, 136, 0);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,6 +1,7 @@
 using com.ARTillery.Combat;
 using com.ARTillery.Movement;
 using System;
+using com.ARTillery.Inventory;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
@@ -40,6 +41,9 @@ namespace com.ARTillery.Control
         private CombatTarget _target;
         private ResourceNode _resourceNode;
         private NavMeshAgent _agent;
+
+
+        public Action<ResourceType, int> OnResourceGathered;
 
         private PlayerBaseState _currentState;
 

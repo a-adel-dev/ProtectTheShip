@@ -1,15 +1,32 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.ARTillery.Inventory
 {
-    public static class ResourceManager
+    public class ResourceManager : MonoBehaviour
     {
-        private static Dictionary<ResourceType, int> resources = new();
+        private Dictionary<ResourceType, int> resources = new();
+        private static ResourceManager _instance;
+        public Action<ResourceType, int> OnResourcesUpdated;
 
+        public static ResourceManager Instance
+        {
+            get => _instance;
+            set => _instance = value;
+        }
 
-        static ResourceManager()
+        private void Awake()
+        {
+            if (Instance is not null)
+            {
+                Instance = null;
+            }
+            Instance = this;
+        }
+
+        private void Start()
         {
             // Initialize the resources dictionary with starting values of 0 for each resource type
             foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
@@ -18,31 +35,40 @@ namespace com.ARTillery.Inventory
             }
         }
 
-        public static int GetResource(ResourceType type)
+        public int GetResource(ResourceType type)
         {
             return resources[type];
         }
 
-        public static void AddResource(ResourceType type, int amount)
+        public void AddResource(ResourceType type, int amount)
         {
             resources[type] += amount;
+            OnResourcesUpdated?.Invoke(type, resources[type]);
         }
 
-        public static void RemoveResource(ResourceType type, int amount)
+        public void RemoveResource(ResourceType type, int amount)
         {
             resources[type] -= amount;
         }
 
-        public static bool CanAfford(ResourceType type, int amount)
+        public bool CanAfford(ResourceType type, int amount)
         {
             return GetResource(type) >= amount;
         }
 
-        public static void Spend(ResourceType type, int amount)
+        public void Spend(ResourceType type, int amount)
         {
             if (CanAfford(type,amount))
             {
                 RemoveResource(type, amount);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
             }
         }
     }

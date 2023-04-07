@@ -1,5 +1,6 @@
 ﻿using com.ARTillery.Combat;
 using com.ARTillery.Core;
+using com.ARTillery.Inventory;
 using UnityEngine;
 
 namespace com.ARTillery.Control
@@ -47,15 +48,17 @@ namespace com.ARTillery.Control
 
             if (_timer >= _player.GatheringRate)
             {
-                _player.GetResourceNode().HarvestNode(_player.GatheringPower);
-                if (_player.GetResourceNode().IsResourceExhusted)
+                ResourceType type;
+                int amountGathered = _player.GetResourceNode().HarvestNode(_player.GatheringPower, out type);
+                Debug.Log($"gathered {amountGathered} {type} ");
+                _player.OnResourceGathered?.Invoke(type, amountGathered);
+                if (_player.GetResourceNode().IsResourceExhausted)
                 {
                     _player.ClearResourceNode();
                     _player.IdleState.EnterState();
                     return;
                 }
                 _timer = 0;
-                Debug.Log("Gathering!");
             }
 
             _timer += Time.deltaTime;

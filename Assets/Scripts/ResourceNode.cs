@@ -1,30 +1,31 @@
-using com.Artillery.UI;
-using System;
 using UnityEngine;
+using com.ARTillery.Inventory;
 
 public class ResourceNode : MonoBehaviour
 {
     [SerializeField]
     private int resourceValue = 100;
 
-    private bool _isResourceExhusted = false;
-    
+    [SerializeField] private ResourceType resourceType;
+
 
     public GameObject GameObject => gameObject;
 
-    public bool IsResourceExhusted { get => _isResourceExhusted; set => _isResourceExhusted = value; }
+    public bool IsResourceExhausted { get; private set; } = false;
 
-    public int HarvestNode(int value)
+    public int HarvestNode(int value, out ResourceType type)
     {
         if (value < resourceValue)
         {
             resourceValue -= value;
+            type = resourceType;
             return value;
 
         }
         else
         {
-            IsResourceExhusted = true;
+            IsResourceExhausted = true;
+            type = resourceType;
             return resourceValue;
         }
     }

@@ -19,6 +19,7 @@ namespace com.ARTillery.Control
             _player.SetCurrentState(this);
             Debug.Log($"Entering Gather State");
             _timer = float.MaxValue;
+            _player.transform.LookAt(_player.GetResourceNode().transform);
         }
 
         public override void UpdateState()
@@ -50,11 +51,10 @@ namespace com.ARTillery.Control
             {
                 ResourceType type;
                 int amountGathered = _player.GetResourceNode().HarvestNode(_player.GatheringPower, out type);
-                Debug.Log($"gathered {amountGathered} {type} ");
                 _player.OnResourceGathered?.Invoke(type, amountGathered);
                 if (_player.GetResourceNode().IsResourceExhausted)
                 {
-                    _player.ClearResourceNode();
+                    _player.DestroySourceNode();
                     _player.IdleState.EnterState();
                     return;
                 }

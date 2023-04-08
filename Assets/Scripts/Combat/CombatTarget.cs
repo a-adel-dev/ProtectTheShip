@@ -1,6 +1,8 @@
 ﻿using com.Artillery.UI;
 using com.ARTillery.Core;
+using com.ARTillery.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace com.ARTillery.Combat
 {
@@ -15,8 +17,8 @@ namespace com.ARTillery.Combat
 
         [SerializeField]
         private HealthBar _healthBar;
-        [SerializeField]
-        private FloatingDamage _floatingDamage;
+        [FormerlySerializedAs("_floatingDamage")] [SerializeField]
+        private FloatingText floatingText;
 
         private Points _health;
         private float _speed;
@@ -67,7 +69,7 @@ namespace com.ARTillery.Combat
             //update health bar
             _healthBar.SetHealth(_health.CurrentPoints);
             //display floating text
-            _floatingDamage.DisplayDamage(realDamage);
+            floatingText.DisplayFloatingText(realDamage, FloatingTextType.Damage);
 
             if (_health.IsOutOfPoints())
             {

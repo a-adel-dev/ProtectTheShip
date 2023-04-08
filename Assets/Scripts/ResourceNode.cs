@@ -1,5 +1,7 @@
 using UnityEngine;
 using com.ARTillery.Inventory;
+using com.Artillery.UI;
+using com.ARTillery.UI;
 
 public class ResourceNode : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class ResourceNode : MonoBehaviour
     private int resourceValue = 100;
 
     [SerializeField] private ResourceType resourceType;
+
+    [SerializeField] private FloatingText gatheredResourceText;
 
 
     public GameObject GameObject => gameObject;
@@ -19,6 +23,7 @@ public class ResourceNode : MonoBehaviour
         {
             resourceValue -= value;
             type = resourceType;
+            UpdateFloatingText(value);
             return value;
 
         }
@@ -26,8 +31,27 @@ public class ResourceNode : MonoBehaviour
         {
             IsResourceExhausted = true;
             type = resourceType;
+            UpdateFloatingText(resourceValue);
             return resourceValue;
         }
+    }
+
+    public void InitializeNode()
+    {
+        gatheredResourceText.gameObject.SetActive(true);
+        gatheredResourceText.ResetAnimation();
+    }
+
+    public void DisableNode()
+    {
+        gatheredResourceText.gameObject.SetActive(false);
+    }
+    
+
+    private void UpdateFloatingText(int value)
+    {
+        
+        gatheredResourceText.DisplayFloatingText(value, FloatingTextType.Ore);
     }
 
     public void DestroyNode()
@@ -38,5 +62,10 @@ public class ResourceNode : MonoBehaviour
     public void Destroy()
     {
         DestroyNode();
+    }
+
+    public void DestroySourceNode()
+    {
+        Destroy(gameObject);
     }
 }

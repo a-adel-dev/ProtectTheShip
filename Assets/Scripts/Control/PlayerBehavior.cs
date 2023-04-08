@@ -152,6 +152,10 @@ namespace com.ARTillery.Control
 
         public void ClearResourceNode()
         {
+            if (_resourceNode is null)
+            {
+                return;
+            }
             _resourceNode = null;
         }
 
@@ -216,6 +220,12 @@ namespace com.ARTillery.Control
             _combatCursor.gameObject.SetActive(true);
             Cursor.visible = false;
             _combatCursor.position = Input.mousePosition;
+        }
+
+        public void DestroySourceNode()
+        {
+            ResourceNode.DestroySourceNode();
+            ResourceNode = null;
         }
     }
 }

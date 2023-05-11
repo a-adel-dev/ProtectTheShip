@@ -26,6 +26,8 @@ namespace com.ARTillery.Combat
         private int _armor;
         private float _attackRate;
 
+        public bool IsDead { get; private set; } = false;
+
 
         private Material _originalMaterial;
 
@@ -74,7 +76,18 @@ namespace com.ARTillery.Combat
             if (_health.IsOutOfPoints())
             {
                 //die
+                IsDead = true;
             }
+        }
+
+        public bool IsCombatTargetDead()
+        {
+            return IsDead;
+        }
+
+        public void DestroyCombatTarget()
+        {
+            Destroy(gameObject);
         }
 
     }

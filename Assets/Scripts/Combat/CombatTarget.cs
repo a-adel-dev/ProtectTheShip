@@ -1,4 +1,5 @@
-﻿using com.Artillery.UI;
+﻿using com.ARTillery.Control;
+using com.Artillery.UI;
 using com.ARTillery.Core;
 using com.ARTillery.UI;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.Serialization;
 
 namespace com.ARTillery.Combat
 {
-    public class CombatTarget : MonoBehaviour
+    public class CombatTarget : MonoBehaviour, ICursorTarget
     {
         [SerializeField]
         private Material _targetHighlightMaterial;
@@ -90,6 +91,10 @@ namespace com.ARTillery.Combat
             Destroy(gameObject);
         }
 
+        public GameObject GetGameObject()
+        {
+            return gameObject;
+        }
     }
 
    

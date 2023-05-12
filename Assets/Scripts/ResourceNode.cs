@@ -1,9 +1,10 @@
+using com.ARTillery.Control;
 using UnityEngine;
 using com.ARTillery.Inventory;
 using com.Artillery.UI;
 using com.ARTillery.UI;
 
-public class ResourceNode : MonoBehaviour
+public class ResourceNode : MonoBehaviour, ICursorTarget
 {
     [SerializeField]
     private int resourceValue = 100;
@@ -67,5 +68,10 @@ public class ResourceNode : MonoBehaviour
     public void DestroySourceNode()
     {
         Destroy(gameObject);
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
     }
 }

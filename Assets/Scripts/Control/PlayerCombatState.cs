@@ -54,7 +54,6 @@ namespace com.ARTillery.Control
                 //TODO: check if target is dead to get out of state
                 if (_player.GetCombatTarget().IsCombatTargetDead())
                 {
-                    
                     _player.GetCombatTarget().DestroyCombatTarget();
                     _player.ClearCombatTarget();
                     ExitState();

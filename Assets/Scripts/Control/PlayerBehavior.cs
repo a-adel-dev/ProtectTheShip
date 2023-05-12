@@ -13,14 +13,13 @@ namespace com.ARTillery.Control
     public class PlayerBehavior : MonoBehaviour
     {
         [Header("Setup")]
-        [SerializeField]
-        private string _currentStateName;
+        [SerializeField] private string _currentStateName;
 
-        [SerializeField]
-        private Animator _animator;
-
-        [SerializeField]
-        private Transform _combatCursor;
+        [SerializeField] private Animator _animator;
+        
+        [SerializeField] private Transform _defaultCursor;
+        [SerializeField] private Transform _combatCursor;
+        [SerializeField] private Transform _miningCursor;
 
         [Header("Combat")]
         [SerializeField]
@@ -83,6 +82,8 @@ namespace com.ARTillery.Control
 
             _currentState = IdleState;
             EnterState(_currentState);
+            
+            DisplayDefaultCursor();
         }
 
         public void EnterState(PlayerBaseState state)
@@ -101,20 +102,34 @@ namespace com.ARTillery.Control
 
         private void InteractWithCombatCursor()
         {
-            RaycastHit[] hits;
-            CombatTarget target;
-            if (IsCursorHit(out hits))
+            if (IsCursorHit(out var hits))
             {
-                if (DetectCombatTarget(hits, out target))
+                if (DetectCursorTarget(hits, out var target))
                 {
-                    DisplayCombatCursor();
+                    //Debug.Log(target.GetGameObject().name);
+                    if (target?.GetType() == typeof(CombatTarget))
+                    {
+                        DisplaySpecialCursor(CursorType.Combat);
+                    }
+                    else if (target?.GetType() == typeof(ResourceNode))
+                    {
+                        DisplaySpecialCursor(CursorType.Mining);
+                    }
                 }
                 else
                 {
-                    _combatCursor.gameObject.SetActive(false);
-                    Cursor.visible = true;
+                    DisplayDefaultCursor();
                 }
             }
+        }
+
+        private void DisplayDefaultCursor()
+        {
+            Cursor.visible = false;
+            _combatCursor.gameObject.SetActive(false);
+            _miningCursor.gameObject.SetActive(false);
+            _defaultCursor.gameObject.SetActive(true);
+            _defaultCursor.position = Input.mousePosition;
         }
 
         public Ray GetMouseRay()
@@ -182,20 +197,22 @@ namespace com.ARTillery.Control
             }
         }
 
-        public bool DetectCombatTarget(RaycastHit[] hits, out CombatTarget target)
+        public bool DetectCursorTarget(RaycastHit[] hits, out ICursorTarget target)
         {
-            CombatTarget combatTarget = null;
-            bool combatTargetPresent = false;
+            ICursorTarget cursorTarget = null;
+            bool cursorTargetPresent = false;
             foreach (RaycastHit hit in hits)
             {
-                if (hit.transform.GetComponent<CombatTarget>())
+                ICursorTarget component;
+                if (hit.transform.TryGetComponent<ICursorTarget>(out component))
                 {
-                    combatTarget = hit.transform.GetComponent<CombatTarget>();
-                    combatTargetPresent = true;
+                    cursorTargetPresent = true;
+                    cursorTarget = component;
                 }
             }
-            target = combatTarget;
-            return combatTargetPresent;
+            target = cursorTarget;
+            
+            return cursorTargetPresent;
         }
 
         public bool IsCursorHit(out RaycastHit[] targetHits)
@@ -220,6 +237,23 @@ namespace com.ARTillery.Control
             _combatCursor.gameObject.SetActive(true);
             Cursor.visible = false;
             _combatCursor.position = Input.mousePosition;
+        }
+        
+        private void DisplaySpecialCursor(CursorType type)
+        {
+            _defaultCursor.gameObject.SetActive(false);
+            switch (type)
+            {
+                case CursorType.Combat:
+                    _combatCursor.gameObject.SetActive(true);
+                    _combatCursor.position = Input.mousePosition;
+                    break;
+                case CursorType.Mining:
+                    _miningCursor.gameObject.SetActive(true);
+                    _miningCursor.position = Input.mousePosition;
+                    break;
+            }
+            
         }
 
         public void DestroySourceNode()

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7330094549853864820}
   - component: {fileID: 7330094549853864819}
   - component: {fileID: 7330094549853864818}
+  - component: {fileID: 2466638116542997551}
   m_Layer: 0
   m_Name: EnemyBase
   m_TagString: Untagged
@@ -48,10 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b90aab6b1a88644ea7b92b1a043613a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetHighlightMaterial: {fileID: 2100000, guid: e8c37b5efd1b8d5409eeab43839c518e,
-    type: 2}
   _statCollection: {fileID: 11400000, guid: 301a4d45d659aee4397463e364fd7132, type: 2}
-  _renderer: {fileID: 7330094551329989302}
   _healthBar: {fileID: 2333812553374827504}
   floatingText: {fileID: 1227692230477858570}
 --- !u!65 &7330094549853864818
@@ -67,6 +65,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0446336, y: 1.837605, z: 1.1280696}
   m_Center: {x: 0.0029264688, y: 0.9213655, z: -0.0024983883}
+--- !u!114 &2466638116542997551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7330094549853864817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85aea119aeec496eb405436e6292e1fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectMesh: {fileID: 7330094551329989300}
+  _outlineLayerName: Outlined Objects
 --- !u!1 &7330094551329989300
 GameObject:
   m_ObjectHideFlags: 0

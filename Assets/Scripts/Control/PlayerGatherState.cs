@@ -9,6 +9,8 @@ namespace com.ARTillery.Control
     {
         private PlayerBehavior _player;
         private float _timer;
+
+        private ResourceNode _currentNode;
         public PlayerGatherState(PlayerBehavior player)
         {
             _player = player;
@@ -20,6 +22,8 @@ namespace com.ARTillery.Control
             Debug.Log($"Entering Gather State");
             _timer = float.MaxValue;
             _player.transform.LookAt(_player.GetResourceNode().transform);
+            _currentNode = _player.GetResourceNode();
+            //_currentNode.SetSelectedVisual();
         }
 
         public override void UpdateState()
@@ -27,7 +31,7 @@ namespace com.ARTillery.Control
             if (Input.GetMouseButton(1))
             {
                 TargetType targetType = ClickTargetFinder.GetClickTargetType(out RaycastHit target);
-                Debug.Log(target.transform.gameObject.name);
+                //Debug.Log(target.transform.gameObject.name);
                 switch (targetType)
                 {
                     case TargetType.CombatTarget:
@@ -66,7 +70,7 @@ namespace com.ARTillery.Control
 
         public override void ExitState()
         {
-
+            //_currentNode.ClearSelectedVisual();
         }
 
         private void MoveToTarget(Vector3 position)

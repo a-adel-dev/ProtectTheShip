@@ -2,6 +2,7 @@ using com.ARTillery.Combat;
 using com.ARTillery.Movement;
 using System;
 using com.ARTillery.Inventory;
+using com.ARTillery.UI;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
@@ -154,29 +155,27 @@ namespace com.ARTillery.Control
 
         public void ClearCombatTarget()
         {
-            _target?.ClearTargetVisual();
+            _target?.ClearSelectedVisual();
             _target = null;
         }
 
         public void SetCombatTarget(CombatTarget target)
         {
             ClearCombatTarget();
+            target.SetSelectedVisual();
             _target = target;
-            _target.SetTargetVisual();
         }
 
         public void ClearResourceNode()
         {
-            if (_resourceNode is null)
-            {
-                return;
-            }
+            _resourceNode?.ClearSelectedVisual();
             _resourceNode = null;
         }
 
         public void SetResourceNode(ResourceNode target)
         {
             ClearResourceNode();
+            target.SetSelectedVisual();
             _resourceNode = target;
         }
 

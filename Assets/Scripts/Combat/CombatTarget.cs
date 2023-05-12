@@ -9,12 +9,12 @@ namespace com.ARTillery.Combat
 {
     public class CombatTarget : MonoBehaviour, ICursorTarget
     {
-        [SerializeField]
-        private Material _targetHighlightMaterial;
+
         [SerializeField]
         private StatCollection _statCollection;
-        [SerializeField]
-        private Renderer _renderer;
+
+
+
 
         [SerializeField]
         private HealthBar _healthBar;
@@ -27,13 +27,13 @@ namespace com.ARTillery.Combat
         private int _armor;
         private float _attackRate;
 
+        private SelectedObjectVisual _selectedObjectVisual;
+
         public bool IsDead { get; private set; } = false;
-
-
-        private Material _originalMaterial;
-
+        
         private void Start()
         {
+            _selectedObjectVisual = GetComponent<SelectedObjectVisual>();
             if (_statCollection is null)
             {
                 Debug.LogError($"Stat collection for {gameObject.name} is null, Please Add a stat collection!");
@@ -45,16 +45,7 @@ namespace com.ARTillery.Combat
         }
 
 
-        public void SetTargetVisual()
-        {
-            _originalMaterial = _renderer.material;
-            _renderer.material = _targetHighlightMaterial;
-        }
 
-        public void ClearTargetVisual()
-        {
-            _renderer.material = _originalMaterial;
-        }
 
         private void FillStats()
         {
@@ -94,6 +85,16 @@ namespace com.ARTillery.Combat
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        public void ClearSelectedVisual()
+        {
+            _selectedObjectVisual.ClearSelectedVisual();
+        }
+
+        public void SetSelectedVisual()
+        {
+            _selectedObjectVisual.SetSelectedVisual();
         }
     }
 

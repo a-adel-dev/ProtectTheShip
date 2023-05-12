@@ -54,7 +54,7 @@ namespace com.ARTillery.Control
             if (Input.GetMouseButton(1))
             {
                 TargetType targetType = ClickTargetFinder.GetClickTargetType(out RaycastHit target);
-                Debug.Log(target.transform.gameObject.name);
+                //Debug.Log(target.transform.gameObject.name);
                 switch (targetType)
                 {
                     case TargetType.CombatTarget:

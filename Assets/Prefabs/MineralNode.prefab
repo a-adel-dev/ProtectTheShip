@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8369487416445782282}
   - component: {fileID: 5769891563679182211}
   - component: {fileID: 5970698411545280474}
+  - component: {fileID: -3649303710976254462}
   m_Layer: 0
   m_Name: MineralNode
   m_TagString: Untagged
@@ -63,6 +64,20 @@ MonoBehaviour:
   resourceValue: 100
   resourceType: 0
   gatheredResourceText: {fileID: 195342343344248357}
+--- !u!114 &-3649303710976254462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8445236960306416420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85aea119aeec496eb405436e6292e1fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectMesh: {fileID: 7631452303209080888}
+  _outlineLayerName: Outlined Objects
 --- !u!1001 &1193946850898461680
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -252,6 +267,12 @@ PrefabInstance:
 --- !u!4 &7107680507184116354 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1476061206485154819, guid: 8f5338841120f7a499da7323a910f2aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 8565714668392631937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7631452303209080888 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2249501234664335033, guid: 8f5338841120f7a499da7323a910f2aa,
     type: 3}
   m_PrefabInstance: {fileID: 8565714668392631937}
   m_PrefabAsset: {fileID: 0}

@@ -1,3 +1,4 @@
+using System;
 using com.ARTillery.Control;
 using UnityEngine;
 using com.ARTillery.Inventory;
@@ -12,11 +13,17 @@ public class ResourceNode : MonoBehaviour, ICursorTarget
     [SerializeField] private ResourceType resourceType;
 
     [SerializeField] private FloatingText gatheredResourceText;
-
+    
 
     public GameObject GameObject => gameObject;
+    private SelectedObjectVisual _selectedObjectVisual;
 
     public bool IsResourceExhausted { get; private set; } = false;
+
+    private void Start()
+    {
+        _selectedObjectVisual = GetComponent<SelectedObjectVisual>();
+    }
 
     public int HarvestNode(int value, out ResourceType type)
     {
@@ -73,5 +80,15 @@ public class ResourceNode : MonoBehaviour, ICursorTarget
     public GameObject GetGameObject()
     {
         return gameObject;
+    }
+
+    public void ClearSelectedVisual()
+    {
+        _selectedObjectVisual.ClearSelectedVisual();
+    }
+
+    public void SetSelectedVisual()
+    {
+        _selectedObjectVisual.SetSelectedVisual();
     }
 }

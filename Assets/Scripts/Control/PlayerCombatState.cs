@@ -21,6 +21,7 @@ namespace com.ARTillery.Control
             Debug.Log("Entering Combat State");
             _fighter ??= _player.Fighter; // if fighter is null, re-assign it
             _timer = float.MaxValue;
+            //_player.GetCombatTarget().SetSelectedVisual();
         }
 
         public override void UpdateState()
@@ -68,7 +69,7 @@ namespace com.ARTillery.Control
 
         public override void ExitState()
         {
-
+            //_player.GetCombatTarget().ClearSelectedVisual();
         }
 
         private void MoveToTarget(Vector3 position)

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
 using com.ARTillery.Interfaces;
+using Assets.Scripts.Interfaces;
 
 namespace com.ARTillery.Control
 {
@@ -22,6 +23,10 @@ namespace com.ARTillery.Control
         [Header("Combat")]
         [SerializeField]
         private int weaponPower = 10;
+        [SerializeField] 
+        private GameObject _weaponObject;
+
+        private IWeapon _weapon;
 
         [FormerlySerializedAs("_gatheringRange")]
         [Header("Gathering")]
@@ -68,6 +73,7 @@ namespace com.ARTillery.Control
         public float GatheringRange { get => gatheringRange; set => gatheringRange = value; }
         public float GatheringRate { get => gatheringRate; set => gatheringRate = value; }
         public int GatheringPower { get => gatheringPower; set => gatheringPower = value; }
+        public IWeapon Weapon { get => _weapon; set => _weapon = value; }
 
         void Start()
         {
@@ -76,6 +82,8 @@ namespace com.ARTillery.Control
             AnimationMaster = GetComponent<IAnimationMaster>();
             Fighter = GetComponent<Fighter>();
             _animator = GetComponent<Animator>();
+            _weapon = _weaponObject.GetComponent<IWeapon>();
+
 
             _idleState = new PlayerIdleState(this);
             _moveState = new PlayerMoveState(this);
@@ -255,6 +263,26 @@ namespace com.ARTillery.Control
         {
             ResourceNode.DestroySourceNode();
             ResourceNode = null;
+        }
+
+        public void ShootWeapon(Vector3 target)
+        {
+            Weapon.ActivateRay(target);
+        }
+
+        internal void StopShooting()
+        {
+            Weapon.DeactivateRay();
+        }
+
+        internal void LookAtTarget(Transform target)
+        {
+            Mover.LookAtTarget(target);
+        }
+
+        internal bool InCombatRange()
+        {
+            return Vector3.Distance(transform.position, _target.transform.position) <= Fighter.Range;
         }
     }
 }

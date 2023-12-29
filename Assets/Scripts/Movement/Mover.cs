@@ -22,7 +22,6 @@ namespace com.ARTillery.Movement
             _animationMaster.SetAnimator(_animator);
         }
 
-        // Update is called once per frame
         void Update()
         {
             Vector3 localVelocity = transform.InverseTransformDirection(_agent.velocity);
@@ -59,6 +58,11 @@ namespace com.ARTillery.Movement
         {
             var navMeshPath = new NavMeshPath();
             return _agent.CalculatePath(position, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
+        }
+
+        public void LookAtTarget(Transform target)
+        {
+            transform.LookAt(new Vector3(target.position.x, transform.forward.y, target.position.z));   
         }
     }
 }

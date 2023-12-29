@@ -20,10 +20,5 @@ namespace com.ARTillery.Combat
         public float AttackRate { get => _attackRate; set => _attackRate = value; }
         public int AttackPower { get => _attackPower; set => _attackPower = value; }
 
-        private void Update()
-        {
-
-        }
-
     }
 }

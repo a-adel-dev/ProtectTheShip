@@ -22,6 +22,8 @@ namespace com.ARTillery.Control
             Debug.Log("Entering Combat State");
             _fighter ??= _player.Fighter; // if fighter is null, re-assign it
             _timer = float.MaxValue;
+
+            
             //_player.GetCombatTarget().SetSelectedVisual();
         }
 
@@ -30,6 +32,7 @@ namespace com.ARTillery.Control
             if (Input.GetMouseButton(1))
             {
                 TargetType targetType = ClickTargetFinder.GetClickTargetType(out RaycastHit target);
+                
                 Debug.Log(target.transform.gameObject.name);
                 switch (targetType)
                 {
@@ -49,7 +52,14 @@ namespace com.ARTillery.Control
                         break;
                 }
             }
+            _player.ShootWeapon(_player.GetCombatTarget().transform.position);
+            _player.LookAtTarget(_player.GetCombatTarget().transform);
 
+            if (!_player.InCombatRange()) 
+            {
+                ExitState();
+                _player.IdleState.EnterState();
+            }
             if (_timer >= _fighter.AttackRate)
             {
                 _player.GetCombatTarget().TakeDamage(_fighter.AttackPower);
@@ -62,7 +72,7 @@ namespace com.ARTillery.Control
                     _player.IdleState.EnterState();
                 }
                 _timer = 0;
-                Debug.Log("Attacking!");
+                //Debug.Log("Attacking!");
             }
 
             _timer += Time.deltaTime;
@@ -71,6 +81,7 @@ namespace com.ARTillery.Control
         public override void ExitState()
         {
             _player.AnimationMaster.SetCombatMotion(false);
+            _player.StopShooting();
             //_player.GetCombatTarget().ClearSelectedVisual();
         }
 

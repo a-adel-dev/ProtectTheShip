@@ -2,39 +2,36 @@ using com.ARTillery.Combat;
 using com.ARTillery.Movement;
 using System;
 using com.ARTillery.Inventory;
-using com.ARTillery.UI;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.Experimental.GraphView.GraphView;
-
+using UnityEngine.Serialization;
 
 namespace com.ARTillery.Control
 {
     public class PlayerBehavior : MonoBehaviour
     {
-        [Header("Setup")]
-        [SerializeField] private string _currentStateName;
-
-        [SerializeField] private Animator _animator;
+        [Header("Setup")] 
         
-        [SerializeField] private Transform _defaultCursor;
-        [SerializeField] private Transform _combatCursor;
-        [SerializeField] private Transform _miningCursor;
+        [SerializeField] private string currentStateName;
+
+        [FormerlySerializedAs("_defaultCursor")] [SerializeField] private Transform defaultCursor;
+        [FormerlySerializedAs("_combatCursor")] [SerializeField] private Transform combatCursor;
+        [FormerlySerializedAs("_miningCursor")] [SerializeField] private Transform miningCursor;
 
         [Header("Combat")]
         [SerializeField]
         private int weaponPower = 10;
 
+        [FormerlySerializedAs("_gatheringRange")]
         [Header("Gathering")]
         [SerializeField]
-        private float _gatheringRange = 0.5f;
+        private float gatheringRange = 0.5f;
 
-        [SerializeField]
-        private int _gatheringPower = 5;
+        [FormerlySerializedAs("_gatheringPower")] [SerializeField]
+        private int gatheringPower = 5;
 
-        [SerializeField]
-        private float _gatheringRate = 0.5f;
+        [FormerlySerializedAs("_gatheringRate")] [SerializeField]
+        private float gatheringRate = 0.5f;
 
         private Mover _mover;
         private Fighter _fighter;
@@ -49,14 +46,14 @@ namespace com.ARTillery.Control
 
         private PlayerIdleState _idleState;
         private PlayerMoveState _moveState;
-        private PlayerCombatState _CombatState;
+        private PlayerCombatState _combatState;
         private PlayerGatherState _gatherState;
         private PlayerBuildState _buildState;
         private PlayerDeathState _deathState;
 
         public PlayerIdleState IdleState { get => _idleState; set => _idleState = value; }
         public PlayerMoveState MoveState { get => _moveState; set => _moveState = value; }
-        public PlayerCombatState CombatState { get => _CombatState; set => _CombatState = value; }
+        public PlayerCombatState CombatState { get => _combatState; set => _combatState = value; }
         public PlayerGatherState GatherState { get => _gatherState; set => _gatherState = value; }
         public PlayerBuildState BuildState { get => _buildState; set => _buildState = value; }
         public PlayerDeathState DeathState { get => _deathState; set => _deathState = value; }
@@ -64,9 +61,9 @@ namespace com.ARTillery.Control
         public Fighter Fighter { get => _fighter; set => _fighter = value; }
         public Mover Mover { get => _mover; set => _mover = value; }
         public ResourceNode ResourceNode { get => _resourceNode; set => _resourceNode = value; }
-        public float GatheringRange { get => _gatheringRange; set => _gatheringRange = value; }
-        public float GatheringRate { get => _gatheringRate; set => _gatheringRate = value; }
-        public int GatheringPower { get => _gatheringPower; set => _gatheringPower = value; }
+        public float GatheringRange { get => gatheringRange; set => gatheringRange = value; }
+        public float GatheringRate { get => gatheringRate; set => gatheringRate = value; }
+        public int GatheringPower { get => gatheringPower; set => gatheringPower = value; }
 
         void Start()
         {
@@ -76,7 +73,7 @@ namespace com.ARTillery.Control
 
             _idleState = new PlayerIdleState(this);
             _moveState = new PlayerMoveState(this);
-            _CombatState = new PlayerCombatState(this);
+            _combatState = new PlayerCombatState(this);
             _gatherState = new PlayerGatherState(this);
             _buildState = new PlayerBuildState(this);
             _deathState = new PlayerDeathState(this);
@@ -96,7 +93,7 @@ namespace com.ARTillery.Control
         private void Update()
         {
             _currentState.UpdateState();
-            _currentStateName = _currentState.ToString();
+            currentStateName = _currentState.ToString();
             InteractWithCombatCursor();
 
         }
@@ -127,10 +124,10 @@ namespace com.ARTillery.Control
         private void DisplayDefaultCursor()
         {
             Cursor.visible = false;
-            _combatCursor.gameObject.SetActive(false);
-            _miningCursor.gameObject.SetActive(false);
-            _defaultCursor.gameObject.SetActive(true);
-            _defaultCursor.position = Input.mousePosition;
+            combatCursor.gameObject.SetActive(false);
+            miningCursor.gameObject.SetActive(false);
+            defaultCursor.gameObject.SetActive(true);
+            defaultCursor.position = Input.mousePosition;
         }
 
         public Ray GetMouseRay()
@@ -140,11 +137,9 @@ namespace com.ARTillery.Control
 
         private void OnDrawGizmos()
         {
-            if (Application.isPlaying)
-            {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(MoveState.GetDestination(), 1);
-            }
+            if (!Application.isPlaying) return;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(MoveState.GetDestination(), 1);
 
         }
 
@@ -155,7 +150,11 @@ namespace com.ARTillery.Control
 
         public void ClearCombatTarget()
         {
-            _target?.ClearSelectedVisual();
+            if (_target is not null)
+            {
+                _target.ClearSelectedVisual();
+            }
+
             _target = null;
         }
 
@@ -168,7 +167,10 @@ namespace com.ARTillery.Control
 
         public void ClearResourceNode()
         {
-            _resourceNode?.ClearSelectedVisual();
+            if (_resourceNode is not null)
+            {
+                _resourceNode.ClearSelectedVisual();
+            }
             _resourceNode = null;
         }
 
@@ -190,10 +192,7 @@ namespace com.ARTillery.Control
             {
                 return _target;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public bool DetectCursorTarget(RaycastHit[] hits, out ICursorTarget target)
@@ -229,27 +228,18 @@ namespace com.ARTillery.Control
                 return true;
             }
         }
-
-
-        private void DisplayCombatCursor()
-        {
-            _combatCursor.gameObject.SetActive(true);
-            Cursor.visible = false;
-            _combatCursor.position = Input.mousePosition;
-        }
-        
         private void DisplaySpecialCursor(CursorType type)
         {
-            _defaultCursor.gameObject.SetActive(false);
+            defaultCursor.gameObject.SetActive(false);
             switch (type)
             {
                 case CursorType.Combat:
-                    _combatCursor.gameObject.SetActive(true);
-                    _combatCursor.position = Input.mousePosition;
+                    combatCursor.gameObject.SetActive(true);
+                    combatCursor.position = Input.mousePosition;
                     break;
                 case CursorType.Mining:
-                    _miningCursor.gameObject.SetActive(true);
-                    _miningCursor.position = Input.mousePosition;
+                    miningCursor.gameObject.SetActive(true);
+                    miningCursor.position = Input.mousePosition;
                     break;
             }
             

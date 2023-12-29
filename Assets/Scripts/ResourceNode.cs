@@ -7,8 +7,7 @@ using com.ARTillery.UI;
 
 public class ResourceNode : MonoBehaviour, ICursorTarget
 {
-    [SerializeField]
-    private int resourceValue = 100;
+    [SerializeField]  private int resourceValue = 100;
 
     [SerializeField] private ResourceType resourceType;
 

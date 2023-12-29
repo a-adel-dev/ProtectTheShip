@@ -19,6 +19,7 @@ namespace com.ARTillery.Control
         public override void EnterState()
         {
             _player.SetCurrentState(this);
+            _player.AnimationMaster.SetGatheringMotion(true);
             Debug.Log($"Entering Gather State");
             _timer = float.MaxValue;
             _player.transform.LookAt(_player.GetResourceNode().transform);
@@ -70,6 +71,7 @@ namespace com.ARTillery.Control
 
         public override void ExitState()
         {
+            _player.AnimationMaster.SetGatheringMotion(false);
             //_currentNode.ClearSelectedVisual();
         }
 

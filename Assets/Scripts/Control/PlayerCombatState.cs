@@ -18,6 +18,7 @@ namespace com.ARTillery.Control
         public override void EnterState()
         {
             _player.SetCurrentState(this);
+            _player.AnimationMaster.SetCombatMotion(true);
             Debug.Log("Entering Combat State");
             _fighter ??= _player.Fighter; // if fighter is null, re-assign it
             _timer = float.MaxValue;
@@ -69,6 +70,7 @@ namespace com.ARTillery.Control
 
         public override void ExitState()
         {
+            _player.AnimationMaster.SetCombatMotion(false);
             //_player.GetCombatTarget().ClearSelectedVisual();
         }
 

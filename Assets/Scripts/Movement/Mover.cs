@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using com.ARTillery.Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.Experimental.GraphView.GraphView;
+
 
 
 namespace com.ARTillery.Movement
@@ -13,17 +12,21 @@ namespace com.ARTillery.Movement
         private NavMeshAgent _agent;
         [SerializeField]
         private Animator _animator;
+        private IAnimationMaster _animationMaster;
 
 
         void Start()
         {
             _agent = GetComponent<NavMeshAgent>();
+            _animationMaster = GetComponent<IAnimationMaster>();
+            _animationMaster.SetAnimator(_animator);
         }
 
         // Update is called once per frame
         void Update()
         {
-            UpdateAnimator();
+            Vector3 localVelocity = transform.InverseTransformDirection(_agent.velocity);
+            _animationMaster.SetCharacterSpeed(localVelocity.z);
         }
 
         public void MoveTo(Vector3 destination)
@@ -32,11 +35,6 @@ namespace com.ARTillery.Movement
             _agent.isStopped = false;
         }
 
-        private void UpdateAnimator()
-        {
-            Vector3 localVelocity = transform.InverseTransformDirection(_agent.velocity);
-            _animator.SetFloat("speed", localVelocity.z);
-        }
 
         public void Stop()
         {

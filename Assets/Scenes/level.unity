@@ -4960,6 +4960,12 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &34839491 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9001370562659967767, guid: 592ac42e64d24e54ebb8a33d78d89eee,
+    type: 3}
+  m_PrefabInstance: {fileID: 9001370561538490235}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &141826482
 GameObject:
   m_ObjectHideFlags: 0
@@ -16441,6 +16447,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 9001370561538490235}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1126800500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34839491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db75deb26407654c93eeeb1be2706de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1160784042
 GameObject:
   m_ObjectHideFlags: 0
@@ -32763,7 +32781,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 372014452}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9001370562659967767, guid: 592ac42e64d24e54ebb8a33d78d89eee,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1126800500}
   m_SourcePrefab: {fileID: 100100000, guid: 592ac42e64d24e54ebb8a33d78d89eee, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

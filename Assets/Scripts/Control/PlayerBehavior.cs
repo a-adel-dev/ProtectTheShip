@@ -5,6 +5,7 @@ using com.ARTillery.Inventory;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
+using com.ARTillery.Interfaces;
 
 namespace com.ARTillery.Control
 {
@@ -38,6 +39,7 @@ namespace com.ARTillery.Control
         private CombatTarget _target;
         private ResourceNode _resourceNode;
         private NavMeshAgent _agent;
+        private Animator _animator;
 
 
         public Action<ResourceType, int> OnResourceGathered;
@@ -46,6 +48,7 @@ namespace com.ARTillery.Control
 
         private PlayerIdleState _idleState;
         private PlayerMoveState _moveState;
+        private IAnimationMaster _animationMaster;
         private PlayerCombatState _combatState;
         private PlayerGatherState _gatherState;
         private PlayerBuildState _buildState;
@@ -60,6 +63,7 @@ namespace com.ARTillery.Control
         public NavMeshAgent Agent { get => _agent; set => _agent = value; }
         public Fighter Fighter { get => _fighter; set => _fighter = value; }
         public Mover Mover { get => _mover; set => _mover = value; }
+        public IAnimationMaster AnimationMaster { get => _animationMaster; set => _animationMaster = value; }
         public ResourceNode ResourceNode { get => _resourceNode; set => _resourceNode = value; }
         public float GatheringRange { get => gatheringRange; set => gatheringRange = value; }
         public float GatheringRate { get => gatheringRate; set => gatheringRate = value; }
@@ -69,7 +73,9 @@ namespace com.ARTillery.Control
         {
             _agent = GetComponent<NavMeshAgent>();
             Mover = GetComponent<Mover>();
+            AnimationMaster = GetComponent<IAnimationMaster>();
             Fighter = GetComponent<Fighter>();
+            _animator = GetComponent<Animator>();
 
             _idleState = new PlayerIdleState(this);
             _moveState = new PlayerMoveState(this);

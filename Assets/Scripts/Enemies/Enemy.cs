@@ -12,10 +12,11 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         _followerEntity = GetComponent<FollowerEntity>();
-        _followerEntity.SetDestination(_destinationTarget.position);
-    }
 
-    private void Update()
-    {
+        var pos = _destinationTarget.position;
+
+        var finalPos = pos - (pos - transform.position).normalized * 6;
+
+        _followerEntity.SetDestination(finalPos);
     }
 }

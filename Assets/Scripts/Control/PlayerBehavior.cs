@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.Serialization;
 using com.ARTillery.Interfaces;
 using Assets.Scripts.Interfaces;
+using Pathfinding;
 
 namespace com.ARTillery.Control
 {
@@ -43,7 +44,8 @@ namespace com.ARTillery.Control
         private Fighter _fighter;
         private CombatTarget _target;
         private ResourceNode _resourceNode;
-        private NavMeshAgent _agent;
+        // private NavMeshAgent _agent;
+        private FollowerEntity _agent;
         private Animator _animator;
 
 
@@ -65,7 +67,7 @@ namespace com.ARTillery.Control
         public PlayerGatherState GatherState { get => _gatherState; set => _gatherState = value; }
         public PlayerBuildState BuildState { get => _buildState; set => _buildState = value; }
         public PlayerDeathState DeathState { get => _deathState; set => _deathState = value; }
-        public NavMeshAgent Agent { get => _agent; set => _agent = value; }
+        public FollowerEntity Agent { get => _agent; set => _agent = value; }
         public Fighter Fighter { get => _fighter; set => _fighter = value; }
         public Mover Mover { get => _mover; set => _mover = value; }
         public IAnimationMaster AnimationMaster { get => _animationMaster; set => _animationMaster = value; }
@@ -77,7 +79,7 @@ namespace com.ARTillery.Control
 
         void Start()
         {
-            _agent = GetComponent<NavMeshAgent>();
+            _agent = GetComponent<FollowerEntity>();
             Mover = GetComponent<Mover>();
             AnimationMaster = GetComponent<IAnimationMaster>();
             Fighter = GetComponent<Fighter>();

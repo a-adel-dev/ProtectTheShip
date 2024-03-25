@@ -1,4 +1,5 @@
 using com.ARTillery.Interfaces;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +10,7 @@ namespace com.ARTillery.Movement
     public class Mover : MonoBehaviour
     {
 
-        private NavMeshAgent _agent;
+        private FollowerEntity _agent;
         [SerializeField]
         private Animator _animator;
         private IAnimationMaster _animationMaster;
@@ -17,7 +18,7 @@ namespace com.ARTillery.Movement
 
         void Start()
         {
-            _agent = GetComponent<NavMeshAgent>();
+            _agent = GetComponent<FollowerEntity>();
             _animationMaster = GetComponent<IAnimationMaster>();
             _animationMaster.SetAnimator(_animator);
         }
@@ -42,7 +43,7 @@ namespace com.ARTillery.Movement
 
         public bool IsReachedDestination()
         {
-            return (_agent.remainingDistance <= _agent.stoppingDistance);
+            return (_agent.remainingDistance <= _agent.stopDistance);
         }
 
 
@@ -54,11 +55,11 @@ namespace com.ARTillery.Movement
             }
         }
 
-        public bool HasPath(Vector3 position)
-        {
-            var navMeshPath = new NavMeshPath();
-            return _agent.CalculatePath(position, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
-        }
+        // public bool HasPath(Vector3 position)
+        // {
+        //     var navMeshPath = new NavMeshPath();
+        //     return _agent.CalculatePath(position, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete;
+        // }
 
         public void LookAtTarget(Transform target)
         {
